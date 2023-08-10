@@ -54,6 +54,16 @@ class FlutterOverlayWindow {
     );
   }
 
+  /// Start task
+  static Future<void> startTask(String fnName) async {
+    await _channel.invokeMethod(
+      'startTask',
+      {
+        "task": fnName,
+      },
+    );
+  }
+
   /// Check if overlay permission is granted
   static Future<bool> isPermissionGranted() async {
     try {

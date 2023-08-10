@@ -109,6 +109,15 @@ public class FlutterOverlayWindowPlugin implements
                 result.success(true);
             }
             return;
+        } else if (call.method.equals("startTask")){
+            String task = call.argument("task");
+            FlutterEngineGroup enn = new FlutterEngineGroup(context);
+            DartExecutor.DartEntrypoint dEntry = new DartExecutor.DartEntrypoint(
+                    FlutterInjector.instance().flutterLoader().findAppBundlePath(),
+                    task);
+            FlutterEngine engine = enn.createAndRunEngine(context, dEntry);
+            FlutterEngineCache.getInstance().put(OverlayConstants.CACHED_TAG, engine);    
+            result.success(null);
         } else {
             result.notImplemented();
         }
@@ -123,13 +132,7 @@ public class FlutterOverlayWindowPlugin implements
 
     @Override
     public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
-        mActivity = binding.getActivity();
-        FlutterEngineGroup enn = new FlutterEngineGroup(context);
-        DartExecutor.DartEntrypoint dEntry = new DartExecutor.DartEntrypoint(
-                FlutterInjector.instance().flutterLoader().findAppBundlePath(),
-                "overlayMain");
-        FlutterEngine engine = enn.createAndRunEngine(context, dEntry);
-        FlutterEngineCache.getInstance().put(OverlayConstants.CACHED_TAG, engine);
+        this.mActivity = binding.getActivity();
         binding.addActivityResultListener(this);
     }
 
